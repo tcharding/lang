@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# clone.sh - clone system
+#
+# Tobin Harding
+#
+START=$(date +%s)
+DST='/mnt/hd/clone'
+
+rsync -aAXv /* ${DST} --del --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found,/var/lib/pacman/sync/*}
+FINISH=$(date +%s)
+rm "${DST}/Backed"*
+echo "total time: $(( ($FINISH-$START) / 60 )) minutes, $(( ($FINISH-$START) % 60 )) seconds" | tee ${DST}/"Backed up: $(date '+%A %d-%m-%Y %T')"

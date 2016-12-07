@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# backup.sh - backup script
+#
+# Tobin Harding
+#
+START=$(date +%s)
+DST='/mnt/hd/backup/tobin/tAce'
+
+# backup home directory
+#rsync -avz --exclude .thunderbird --exclude "build/kernel" "/home/tobin" "${DST}/home/"
+
+# backup root directories
+#su -c "rsync -avz /boot ${DEST} ; rsync -avz /root ${DST} ; rsync -avz /etc ${DEST} ;"
+
+
+rsync -aAXv /* ${DST} --del --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found,/var/lib/pacman/sync/*}
+FINISH=$(date +%s)
+rm ${DST}/"Backed up*"
+echo "total time: $(( ($FINISH-$START) / 60 )) minutes, $(( ($FINISH-$START) % 60 )) seconds" | tee ${DST}/"Backed up $(date '+%Y-%m-%d, %T, %A')"

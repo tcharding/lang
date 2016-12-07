@@ -1,0 +1,12 @@
+*
+* hello.mixal: MIXAL hello world
+*
+* label	      ins  operand	comment
+TERM	      EQU  19		the MIX console device number 
+	      ORIG 3000		start address
+START	      OUT  MSG(TERM)	output data at address MSG
+	      HLT  		
+MSG	      ALF  " HELL"
+	      ALF  "O WOR"
+	      ALF  "LD   "
+	      END  START

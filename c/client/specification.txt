@@ -1,0 +1,17 @@
+Client Program Specification
+
+store.c:
+
+* Implements object store of clients (struct client)
+* A client is identified by name address pair
+
+
+client.c:
+
+* Implements creating, freeing, and printing of clients
+
+
+arc 
+
+* name address pair is unique accross store
+* name is case sensitive, address is not

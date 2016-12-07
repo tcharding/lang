@@ -1,0 +1,29 @@
+#include <stdlib.h>
+#include <check.h>
+
+/* 
+ * This file runs the check test framewok
+ *
+ * Polocy: 
+ *  test main.c functions in this file
+ *  for additional files add chk_file.c and create suite of function tests
+ */
+
+/* suite prototypes */
+Suite *ex_suite(void);
+
+int main(void)
+{
+    int number_failed;
+    SRunner *sr;
+
+    sr = srunner_create(NULL);
+
+    srunner_add_suite(sr, ex_suite());
+    
+    srunner_run_all(sr, CK_NORMAL);
+    number_failed = srunner_ntests_failed(sr);
+    srunner_free(sr);
+
+    return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+}

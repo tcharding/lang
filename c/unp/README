@@ -1,0 +1,7 @@
+All code is taken from, or built on top of code from:
+
+UNIX Network Programming, Volume 1, Third Edition.
+- W. Richard Stevens, Bill Fenner, Andrew M Rudoff
+
+Run 'make' to build all projects.
+- Tobin Harding (19/02/15)

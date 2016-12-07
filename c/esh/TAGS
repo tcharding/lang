@@ -1,0 +1,137 @@
+
+check_init.c,54
+START_TEST 7,76
+Suite *init_suite(init_suite18,227
+
+check_hlpr.c,54
+START_TEST 7,98
+Suite *hlpr_suite(hlpr_suite24,359
+
+hlpr.c,28
+char *dupstr(dupstr15,209
+
+test_suite.c,16
+int main(9,140
+
+stmnt.c,234
+#define EOS 6,76
+struct stmnt *read_stmnt(read_stmnt17,323
+void print_stmnt(41,760
+struct stmnt *init_stmnt(init_stmnt65,1313
+char *next_token(next_token86,1750
+char *add_to_cmnd(add_to_cmnd94,1855
+void print_cmnd(102,1961
+
+main.c,33
+int loop(8,124
+int main 25,347
+
+check_stmnt.c,55
+START_TEST 7,68
+Suite *stmnt_suite(stmnt_suite13,99
+
+init.c,45
+char *prompt(prompt14,237
+int init(35,575
+
+check_init.c,54
+START_TEST 7,76
+Suite *init_suite(init_suite18,227
+
+check_hlpr.c,54
+START_TEST 7,98
+Suite *hlpr_suite(hlpr_suite24,359
+
+hlpr.c,156
+char *dupstr(dupstr15,209
+char **vector_init(vector_init31,485
+char **vector_add(vector_add41,590
+void vector_print(51,741
+void vector_free(73,1040
+
+test_suite.c,16
+int main(9,140
+
+stmnt.c,332
+#define EOS 6,76
+struct stmnt *read_stmnt(read_stmnt25,603
+void stmnt_print(58,1293
+void stmnt_free(80,1734
+struct stmnt *stmnt_init(stmnt_init109,2191
+char *next_token(next_token130,2628
+struct cmnd *cmnd_init(cmnd_init138,2731
+struct cmnd *cmnd_add(cmnd_add161,3129
+void cmnd_print(168,3226
+void cmnd_free(183,3499
+
+main.c,33
+int loop(8,124
+int main 31,451
+
+check_stmnt.c,55
+START_TEST 7,68
+Suite *stmnt_suite(stmnt_suite13,99
+
+init.c,45
+char *prompt(prompt14,237
+int init(35,595
+
+check_init.c,54
+START_TEST 7,76
+Suite *init_suite(init_suite18,227
+
+check_hlpr.c,54
+START_TEST 7,98
+Suite *hlpr_suite(hlpr_suite24,359
+
+hlpr.c,156
+char *dupstr(dupstr15,209
+char **vector_init(vector_init31,485
+char **vector_add(vector_add41,590
+void vector_print(51,741
+void vector_free(73,1040
+
+test_suite.h,28
+#define  _TEST_SUITE_H2,23
+
+test_suite.c,16
+int main(9,140
+
+stmnt.c,332
+#define EOS 6,76
+struct stmnt *read_stmnt(read_stmnt25,603
+void stmnt_print(58,1293
+void stmnt_free(80,1734
+struct stmnt *stmnt_init(stmnt_init109,2191
+char *next_token(next_token130,2628
+struct cmnd *cmnd_init(cmnd_init138,2731
+struct cmnd *cmnd_add(cmnd_add161,3129
+void cmnd_print(168,3226
+void cmnd_free(183,3499
+
+main.c,33
+int loop(8,124
+int main 31,451
+
+check_stmnt.c,55
+START_TEST 7,68
+Suite *stmnt_suite(stmnt_suite13,99
+
+esh.h,340
+#define _ESH_H2,15
+#define DEBUG 4,31
+#define PRINT(7,120
+#define DP(10,222
+#define esh_err(13,335
+struct cmnd 20,472
+    char *path;path21,489
+    char **argv;argv22,505
+struct stmnt 25,526
+    char **var_list;var_list26,541
+    struct cmnd *cmnd;cmnd27,604
+    char *infile;infile28,627
+    char *outfile;outfile29,664
+
+init.c,45
+char *prompt(prompt14,237
+int init(35,595

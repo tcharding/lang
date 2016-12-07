@@ -1,0 +1,11 @@
+#ifndef _PERSON_H
+#define _PERSON_H
+
+struct person {
+    char *name;
+    int age;
+};
+
+void print_person(struct *person);
+
+#endif	/* _PERSON_

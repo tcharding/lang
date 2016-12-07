@@ -1,0 +1,24 @@
+# define the C compiler to use
+CC = gcc
+
+ODIR = obj
+
+_OBJ = init.o stmnt.o parse.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+
+_TST_OBJ = tst-esh.o tst-init.o  tst-parse.o  tst-stmnt.o 
+TST_OBJ = $(patsubst %,$(ODIR)/%,$(_TST_OBJ))
+
+all: clean esh tst
+
+esh:
+	cd src; make
+	$(CC) -o esh $(OBJ) $(ODIR)/main.o
+
+tst:
+	cd test; make
+	$(CC) -o tst-esh $(TST_OBJ) $(OBJ)
+
+clean:
+	rm obj/* esh tst-esh
+

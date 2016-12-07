@@ -1,0 +1,5 @@
+#ifndef _VECTOR_H
+#define _VECTOR_H
+
+VCTR *vinit();
+#endif	/* _VECTOR_H */

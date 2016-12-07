@@ -1,0 +1,14 @@
+# Elegant Shell - Extended Backus Naur Form
+
+statement = command ;
+command = [ws], pathname | filename, ws, {token}, [ws], [;]
+token = ws, string, ws | quote, string, {string}, quote
+
+quote = single | double (* opening and closing quotes must match *)
+single = '
+double = "
+
+pathname = /, string (* absolute pathname *)
+filename = string (* relative pathname *)
+string = any ascii character except whitespace
+ws = space | tab, {space}, { tab} (* whitespace *)

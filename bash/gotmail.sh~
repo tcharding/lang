@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# gotmail - check if there is new mail
+
+BOXES=('IN-inbox' 'IN--personal' 'IN-S-linux-kernel-announce')
+
+
+for box in "${BOXES[@]}"
+do
+    DIR="${MAIL}/${box}/new"
+    cd $DIR
+    cnt=$(ls -l | grep "^-" | wc -l)
+    if (( cnt > 0 ));
+    then
+	echo "$box"
+    fi
+done

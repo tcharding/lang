@@ -1,0 +1,438 @@
+2014-08-04  jao  <jao@gnu.org>
+
+	Including autogen.sh in distribution tarball
+
+	THANKS updated for 1.2.8
+
+2014-08-03  jao  <jao@gnu.org>
+
+	NEWS updated for 1.2.8
+
+	Apparently tautological comparisons fixed (bug #42871)
+
+	Whitespace
+
+2014-08-02  jao  <jao@gnu.org>
+
+	Fix for compilation in darwin (bug #42818)
+
+2014-05-21  Jose Antonio Ortega Ruiz  <jao@imladris>
+
+	Avoiding format strings security warnings (cf. #8467)
+
+2014-05-20  Jose Antonio Ortega Ruiz  <jao@imladris>
+
+	Fixes for readline 6.3
+
+2014-01-06  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Help message for werrors configuration option fixed
+
+	Fixes for building with --without-guile
+
+	dummy.c -> darwin.c
+
+	Compilation fixes
+
+	Deprecated INCLUDES in Makefile.am removed
+
+	Incorporating gcompletion (fixes #39817)
+
+	New .gitignore entries
+
+	Fix for #41098 (compilation in darwing sans libguile)
+
+	Fix for #41097 (compilation in darwin)
+
+2013-10-24  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Invalid assertion in xmix_vm.c (closes #40359)
+
+2013-02-25  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Thanks where thanks are due
+
+2013-02-23  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	NEWS for 1.2.7
+
+	Generating ChangeLog during make dist
+
+2013-02-18  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Convenience target to generate manual
+
+	Guile versions updated in doc
+
+	gendocs scripts updated
+
+	Version updated to 1.2.7
+
+	Additional samples and doc from TAOCP, via ESR's MIXAL
+
+	News bit
+
+	gitlog-to-changelog updated
+
+	Upgrade to guile 2.0 (Aleix Conchillo)
+
+2010-10-10  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Release and maintenance scripts
+
+	ChangeLog generator updated
+
+	Fix for #5652
+
+2010-09-27  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Fix for off-by-one bug in I-register modification breakpoints
+
+2010-09-11  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Allow parallel (make -jn) builds (#31018)
+
+	Minimum libintl set to 0.37
+
+	Fix for the fix of #31010
+
+2010-09-10  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Versions mentioned in documentation and configure.ac updated
+
+	Fix for #29524 (links to source repo updated in manual)
+
+	Fix for #31010 (no error on MOVE 0)
+
+2010-08-11  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Typo in README (hat tip Iuri T.)
+
+2010-03-26  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Fix for #28086 (compilation without Guile).
+
+	Document generation scripts updated.
+
+2009-10-13  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Requiring inttool 0.40.
+
+2009-10-11  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Typos and nits in the previous patch.
+
+	Proper acknowledge for Aleix's contributions.
+	* THANKS:
+	* doc/mdk_ack.texi: Proper acknowledgement.
+
+	Fixes for signature of guile initialization functions.
+	  * mixgtk/gmixvm.c: inner_main_ signature corrected
+	  * mixutils/mixvm_loop.c: loop_ signature corrected
+	  * mixguile/mixguile.h: Cosmetics
+
+	NEWS for 1.2.5.
+
+	Copyright year updated.
+
+	Using gnulib's gitlog-to-changelog to generate ChangeLog.
+
+	Stanza for ChangeLog generation added to autogen.sh.
+
+	configure.in -> configure.ac in autogen.sh.
+
+2009-10-05  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Minimum gtk+ version pumped to 2.16.
+
+	GtkFileChooser compatibility (conditionally using gtk 2.18 feature).
+
+	Copyright years update.
+
+	gmixvm: glade file: apparently, dialogs need to be top level.
+
+	gmixvm glade file: dialog properties homogenized.
+
+	Gmixvm's new glade file tweaks (mostly vbox layouts).
+
+	External programs directory scanning delayed (but still present).
+
+	Migration of gmixvm's glade file to Glade 3.
+
+2009-10-04  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Fix for application exit (glade changes were too many)
+
+	Revert "Glade file updated (editing with Glade 3), and exit callback registered."
+	This reverts commit 7acdf4dca205d8da124cd169da9993ac3c6e1627.
+
+	Glade file updated (editing with Glade 3), and exit callback registered.
+
+2009-10-02  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Cosmetics.
+
+	Guile: not using the deprecated gh_* interface.
+
+2009-10-01  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Fix for #23816: missing symbol name in EQU is now just a warning.
+
+2009-08-23  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	configure.in is now called configure.ac.
+
+	autom4te cache dir removed
+
+2008-08-31  jao  <jao@gnu.org>
+
+	.ignore files for the compilation products
+
+	mix_eval_scanner: clean up dead code and remove warning (input() not used)
+
+2008-03-21  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Copyright year in Glade file
+
+	NEWS update for 1.2.4
+
+	Minor TODO updates
+
+	Manual generation scripts updated and ignoring doc/manual
+
+2008-03-20  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Set all fonts dialog fixed (using correct default font)
+
+2008-03-17  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Default mixasm specification fixed
+
+	Add extra application mime type for external execs in darwin (closes #17519)
+
+	GTK version check for gkt_entry_completion_set_popup_single_match()
+
+	Properly set external commands, taking into account the host type
+
+	More ignored files
+
+2008-03-16  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Initial toolbar style set properly
+
+	Ignore Glade backup files
+
+	Lower gtk requirements to 2.6
+
+	Compatibility with GTK+ 2.10
+
+2008-03-15  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	arch-inventory files removed
+
+	Org-mode for TODO file
+
+	Copyright year update
+
+	Texinfo's @include only works properly with depth 1
+
+	More ignored files
+
+	GPL/FDL license files updated
+
+	Small intl fixes and POTFILES.in updated.
+
+	Version bump and GTK+ >= 2.12.0 required.
+
+	Adapted to new GtkTooltip API.
+
+	More ignored files.
+
+	Ignore files generated by autogen.sh
+
+2007-06-26  Jose A Ortega Ruiz  <jao@gnu.org>
+
+	GPL v3 notices
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-43
+
+2006-08-16  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Make -Werror a configuration option and use AM_CFLAGS everywhere
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-42
+
+2006-08-15  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Unneeded assertion removed
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-41
+
+2006-08-11  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	News for version 1.2.3
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-40
+
+	mixvm's default prompt fixed
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-39
+
+	Version strings updated to 1.2.3
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-38
+
+2006-08-10  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	64bit compilation fixes & About dialog embellishments
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-37
+
+2006-08-09  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Configurable toolbars (icons, text or both)
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-36
+
+	Attach/detach buttons in main toolbar are only active when meaningful.
+	E.g., if all windows are detached, no 'detach' button appears.
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-35
+
+2006-08-08  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Missing toolbar tooltips added
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-34
+
+	About dialog cleaned up
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-33
+
+	Sloppy gpointer conversions fixed
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-32
+
+	Darwin compilation warnings fixed
+	Thanks to Aleix Conchillo.
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-31
+
+	Only executable files can be selected in external programs dialog
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-30
+
+	Set names for MIX/MIXAL filters in file chooser dialogs
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-29
+
+2006-08-08  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	External programs management improvement
+	- External programs (editor and mixasm) execution is more robustly
+	  controlled both in mixvm and gmixvm.
+	- In gmixvm the external programs dialog has been revamped:
+	  - Only proper paths can be introduced for the executables (via a
+	    graphical file chooser).
+	  - Flags for mixasm are no longer free text, but a check button.
+
+	- Internally, the code has been refactored.
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-28
+
+2006-08-07  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Setting ALL_LINGUAS in configure.in is obsolete
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-27
+
+	Minor adjustments to manual generation template
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-26
+
+	Restore invariant sections in documentation
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-25
+
+	Define missing ac variable GETTEXT_PACKAGE
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-24
+
+2006-08-06  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Make distcheck happy
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-23
+
+	No invariant sections in manual
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-22
+
+	Leak fixed
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-21
+
+	gmixvm: history in terminal input dialog
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-20
+
+	Refactoring of the previous patch
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-19
+
+	Load file dialog remembers last directory
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-18
+
+	All tests passing again (mix parser re-entrant)
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-17
+
+2006-08-05  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Compilation tests re-enabled
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-16
+
+	Info about new Arch archive
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-15
+
+	Acknowledgements to Michael and Xiaofeng
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-14
+
+	Invalid F-spec reported as warnings, to allow hacks as CMPX xxxx(6)
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-13
+
+	Accept F-spec in NOP (with warning)
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-12
+
+	Bug fix: mixvm's smem correctly handles negative zero
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-11
+
+	Bug fix: typo in cbpo help string
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-10
+
+	Compilation warnings fixed
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-9
+
+2006-03-25  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Warnings as errors
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-8
+
+2006-03-24  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	CVS $Id$ tags removed.
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-7
+
+	ChangeLog is automatically generated.
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-6
+
+	Compilation warnings fixed.
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-5
+
+2006-03-21  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Arch inventory files added
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-4
+
+2006-03-21  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Bug fixes for 1.2.2 (latest CVS version)
+	* mixgtk/mixgtk.glade (Module): I1 and I2 in mixvm swapped to their
+	correct position (closes #15746).
+
+	* mixgtk/mixgtk_mixvm.c (init_mem_): fixed segfault when clicking Memory
+	title bar (closes #15910).
+
+	* configure.in: obsolete C flags for Darwin deleted.
+
+	* misc/mixal-mode.el (Module): sync with Emacs CVS (Pieter).
+
+	* mixlib/mix.c: copyright year in console message updated.
+
+	* mixgtk/mixgtk_device.c (write_char_): buffer size was insufficient.
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-3
+
+2006-03-20  Jose Antonio Ortega Ruiz  <jao@gnu.org>
+
+	Trivial changes to tag rel--1.2--patch-1
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-2
+
+	Version 1.2.1 imported
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--patch-1
+
+	Archive creation
+	git-archimport-id: mdk@sv.gnu.org/mdk--devel--1--base-0

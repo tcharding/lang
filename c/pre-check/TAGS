@@ -1,0 +1,46 @@
+
+parse.c,255
+enum { NONE 7,96
+enum { NONE , SINGLE,7,96
+enum { NONE , SINGLE, DOUBLE 7,96
+struct cmnd *parse(parse17,343
+char *get_file(get_file38,735
+struct cmnd *cmnd_init(cmnd_init72,1590
+void cmnd_free(98,2056
+int main(120,2461
+int t_get_file(133,2656
+
+main.c,164
+#define _GNU_SOURCE1,0
+#define PROMPT_MAX 8,120
+static char *prompt;prompt10,144
+int main 17,230
+int main_loop(38,552
+int setprompt(64,974
+int init(73,1085
+
+tst-parse.c,119
+char *inputs[inputs10,189
+int main(25,410
+int tst-isquote(isquote55,1102
+int tst-free_vector(free_vector60,1140
+
+esh.h,144
+#define _ESH_H2,15
+#define DEBUG 4,31
+#define debug_print(7,121
+struct cmnd 10,229
+    char *path;path11,269
+    char **argv;argv12,285
+
+valgrind-error/parse.c,262
+enum { NONE 7,80
+enum { NONE , SINGLE,7,80
+enum { NONE , SINGLE, DOUBLE 7,80
+struct cmnd 9,142
+    char *path;path10,156
+    char *argv[argv11,172
+struct cmnd *parse(parse23,403
+char *get_file(get_file35,620
+int main(69,1521
+int t_get_file(82,1716

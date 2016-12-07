@@ -1,0 +1,53 @@
+
+#
+# clone.sh - clone system
+#
+# Tobin Harding
+#
+START=$(date +%s)
+STORE='/mnt/hd/clone' # root directory for clones
+#HOST= # subdirectory
+SIP= # IP of store
+HIP=$(/sbin/ip addr | grep '192.168' | awk '{ print $2}' | awk -F/ '{ print $1 }') # IP of host
+
+echo "ip: $HIP"
+exit 0
+
+clone_tAce() 
+{
+    DST="${STORE}/tAce"
+    rsync -aAXv /* ${DST} --del --exclude={/dev/*,/proc/*,/sys/*,/tmp/*,/run/*,/mnt/*,/media/*,/lost+found,/tmp/*} 
+    FINISH=$(date +%s) 
+    rm "${DST}/Backed"* 
+    echo "total time: $(( ($FINISH-$START) / 60 )) minutes, $(( ($FINISH-$START) % 60 )) seconds" | tee ${DST}/"Backed up: $(date '+%A %d-%m-%Y %T')"
+    exit 0
+}
+
+clone_vps() 
+{
+    echo "Vps clone not implemented yet"
+    exit 1
+}
+
+# Main Script
+
+if [ $# -eq 0 ]; then
+    HOST='tAce'
+else
+    HOST="$1"
+fi
+
+# only accept tAce and vps 
+case "$HOST" in
+    tAce ) clone_tAce ;;
+    vps ) clone_vps ;;
+    *) exit 1 ;;
+esac
+    
+
+DST="${STORE}/${HOST}"
+echo "cloning host: $HOST"
+
+
+
+exit 0

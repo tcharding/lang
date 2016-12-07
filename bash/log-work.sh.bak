@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# log-work.sh - make log entry for work done
+#
+# Tobin Harding
+LOG=/home/tobin/work.log

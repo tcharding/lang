@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+/* 
+ * Example C program 
+ *
+ * Features shown:
+ *
+ *  testing
+ */
+
+int main(int argc, char *argv)
+{
+
+
+    exit(EXIT_SUCCESS);
+}
+
+int exfun()
+{
+    return 0;
+}

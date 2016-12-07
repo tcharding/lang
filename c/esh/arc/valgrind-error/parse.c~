@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+
+enum { NONE , SINGLE, DOUBLE }; /* quote character values */
+
+struct cmnd {
+    char *path;
+    char *argv[];
+};
+
+void free_cmnd(struct cmnd *);
+struct cmnd *parse(const char *input);
+char *get_file(const char *input);
+
+/**
+ * parse input into cmnd.
+ *
+ * @return pointer to newly allocated memory, free with free_cmnd
+ */
+struct cmnd *parse(const char *input) 
+{
+
+    return NULL;		
+
+}
+/**
+ * get_file. Gets the file name out of input
+ *
+ * @param input string to parse
+ * @return pointer to newly allocated memory containing filename
+ */
+char *get_file(const char *input)
+{
+    char *fnptr; 		/* ptr to filename */
+    size_t len;			/* length of filename */
+    char *sptr;			/* pointer into input */
+    int space = ' ';
+    
+    if (input == NULL)
+	return NULL;
+
+    if ((sptr = strchr(input, space)) == NULL) { /* no spaces in input */
+	len = strlen(input);
+    	fnptr = malloc(len + 1); /* +1 for '\0' */
+	if (fnptr == NULL) {
+    	    perror("get_file: malloc error");
+    	    return NULL;
+    	}
+	strcpy(fnptr, input);
+    } else {
+	len = sptr - input;		   /* calculate using ptr arithmetic */
+    	fnptr = malloc( len + 1); /* +1 for '\0' */
+    	if (fnptr == NULL) {
+    	    perror("get_file: malloc error");
+    	    return NULL;
+    	}
+	strncpy(fnptr, input, len);
+    }
+    return fnptr;
+}
+/****************************************************
+ * Tests
+ ***************************************************/
+int t_get_file();
+
+int main(void)
+{
+    int fails = 0;
+
+    fprintf(stderr, "Running test suite ...\n\n");
+
+    fails += t_get_file();
+
+    fprintf(stderr, "\n Total tests failed: %d\n", fails);
+
+    return(0);
+}
+
+int t_get_file()
+{
+    int res = 0;
+    char *fnptr;
+    char *cmnd = "cmnd";
+    int cmp = 0;
+
+    fnptr = get_file("cmnd");
+    cmp = strcmp(fnptr, cmnd);
+    if (cmp != 0) {
+	fprintf(stderr, "t_get_file failed at line: %d\n", __LINE__);
+	++res;
+    }
+    free(fnptr);
+
+    fnptr = get_file("cmnd -o");
+    if (strcmp(fnptr, "cmnd") != 0) {
+	fprintf(stderr, "t_get_file failed at line: %d\n", __LINE__);
+	++res;
+    }
+    free(fnptr);
+
+    fnptr = get_file("cmnd -o arg --option");
+    if (strcmp(fnptr, "cmnd") != 0) {
+	fprintf(stderr, "t_get_file failed at line: %d\n", __LINE__);
+	++res;
+    }
+    free(fnptr);
+
+    return res;
+}
+
+

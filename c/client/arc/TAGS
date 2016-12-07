@@ -1,0 +1,46 @@
+
+client.c,530
+struct client 6,78
+    char *name;name7,94
+    char *addr;addr8,130
+    int num;9,168
+struct client_tab 12,207
+    int num;13,227
+    int max;14,274
+    struct client *cls;cls15,314
+} cltab;16,358
+    INIT 19,376
+    GROW 20,417
+struct client *newcl(newcl35,1077
+int gencl_num(69,1929
+void freecl(82,2098
+void printcl(90,2217
+int addcl(96,2379
+struct client *clbyname(clbyname118,2940
+struct client *clbyaddr(clbyaddr132,3249
+struct client *clbynum(clbynum146,3552
+void dump(160,3802
+int main 172,3984
+
+client.c,530
+struct client 6,78
+    char *name;name7,94
+    char *addr;addr8,130
+    int num;9,168
+struct client_tab 12,207
+    int num;13,227
+    int max;14,274
+    struct client *cls;cls15,314
+} cltab;16,358
+    INIT 19,376
+    GROW 20,417
+struct client *newcl(newcl35,1077
+int gencl_num(69,1929
+void freecl(82,2098
+void printcl(90,2217
+int addcl(96,2379
+struct client *clbyname(clbyname118,2940
+struct client *clbyaddr(clbyaddr132,3249
+struct client *clbynum(clbynum146,3552
+void dump(160,3802
+int main 172,3984

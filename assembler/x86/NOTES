@@ -1,0 +1,30 @@
+Subroutine rules
+
+Caller 
+
+1. save caller-saved registers - EAX, ECX, EDX
+2. To pass parameters push onto stack in reverse order (last parameter
+first)
+3. issue call instruction
+
+... call subroutine
+
+1. Remove parameters from stack
+2. Restore the contents of caller-saved registers
+
+Callee
+
+1. Push value of EBP onto stack and copy ESP into EBP
+
+   push	ebp
+   mov	ebp, esp  (ebp is used by convention to access parameters)
+2. Allocate space on stack for local variables
+3. Save callee-saved registers that will be used - EBX, EDI, ESI
+
+... body of subroutine
+
+1. Leave the return value in EAX
+2. Restore calle-saved registers
+3. Deallocate local variables
+4. Restore the callers base pointer by poping off stack
+5. ret

@@ -1,0 +1,47 @@
+# Dev Makefile
+CC = gcc
+CFLAGS = -Wall -pedantic -std=c99 -g
+OUT = client 			# executable name
+
+# directories
+SDIR = src			# source dir
+ODIR = obj			# objects
+
+_OBJS = client.o store.o main.o
+#OBJs = $(patsubst %,$(ODIR)/%,$(_OBJS))
+#OBJS = $(_OBJS:%=$(ODIR)/%)
+OBJS = $(_OBJS:%.o=obj/%.o)
+
+default: echo
+
+echo:
+	echo $(_OBJS)
+	echo $(OBJS)
+
+all:
+	make clean
+	make client
+	make tests
+
+tests:
+	make tst-verbrose
+	make tst-store
+
+$(OUT): $(OBJS)
+	$(CC) -o $@ $^
+
+obj/client.o: src/client.c
+	$(CC) -c $(CFLAGS) $(INC) -o $@ $< 
+
+obj/%.o: $(SDIR)/%.c 
+	$(CC) -c $(CFLAGS) $(INC) -o $@ $< 
+
+# tst-verbrose: tst-verbrose.o store.o
+# 	$(CC) -o tst-verbrose tst-verbrose.o store.o
+
+# tst-store: tst-store.o store.o 
+# 	$(CC) -o tst-store tst-store.o store.o
+
+.PHONY: clean
+clean:
+	rm -f $(ODIR)/*.o $(OUT)
