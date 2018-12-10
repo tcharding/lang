@@ -3,10 +3,15 @@
 # Back up script using Duplicity
 # Tobin Harding
 
+#
+# Restore a file/directory with
+#  sudo duplicity --file-to-restore home/tobin/.getmail file:///mnt/xhd/duplicity/ /home/tobin/.getmail
+#
+
 LOG='/var/log/duplicity.log'
 SRC='/'
 DST='file:///mnt/xhd/duplicity/'
-EXCLUDES='--exclude /mnt --exclude /proc --exclude /tmp --exclude /sys'
+EXCLUDES='--exclude /mnt --exclude /proc --exclude /tmp --exclude /sys --exclude /boot --exclude /lib/modules'
 
 log_msg(){
     echo $@ >> $LOG
