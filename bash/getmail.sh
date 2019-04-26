@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 #
-# getmail: run getmail and return true
-/usr/bin/getmail
+# Get my mail
+
+getmail -r fastmail.conf
 
 exit 0
+

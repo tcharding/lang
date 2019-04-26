@@ -6,7 +6,7 @@
 shopt -s -o nounset
 shopt -s -o noclobber
 
-# Pull from don
-rsync -avz don:/etc /backup/host/don/
+# Pull daily backups from cps
+rsync -avz root@cps.crowdcoded.com.au:/var/backups/etc/ /backups/hosts/cps/etc
 
 exit 0

@@ -1,0 +1,395 @@
+#!/usr/bin/env ruby
+
+# This script finds people that might be interested in a patch
+# usage: git related <files | rev-list options>
+
+$since = '5-years-ago'
+$min_percent = 10
+$files = []
+$rev_args = []
+$show_commits = false
+
+$mailmaps = {}
+$mailmaps_complex = {}
+
+git_dir = %x[git rev-parse --git-dir].chomp
+$base_dir = File.dirname(git_dir)
+$cur_dir = Dir.pwd
+
+KNOWN_ROLES = {
+  'Signed-off-by' => :signer,
+  'Reviewed-by' => :reviewer,
+  'Acked-by' => :acker,
+  'Cc' => :cced,
+}
+
+if RUBY_VERSION < "1.9"
+  def File.popen(cmd, *args)
+    cmd = cmd.join(' ') if cmd.kind_of?(Array)
+    super(cmd, *args)
+  end
+end
+
+def get_mailmap(filename)
+  return unless File.exists?(filename)
+  File.open(filename) do |f|
+    f.each do |line|
+      case line.gsub(/\s*#.*$/, '')
+      when /^([^<>]+)\s+<(\S+)>$/
+        $mailmaps[$2] = [ $1, nil ]
+      when /^<(\S+)>\s+<(\S+)>$/
+        $mailmaps[$2] = [ nil, $1 ]
+      when /^([^<>]+)\s+<(\S+)>\s+<(\S+)>$/
+        $mailmaps[$3] = [ $1, $2 ]
+      when /^([^<>]+)\s+<(\S+)>\s+([^<>]+)\s+<(\S+)>$/
+        $mailmaps_complex[[$3, $4]] = [ $1, $2 ]
+      end
+    end
+  end
+end
+
+get_aliases if $get_aliases
+get_mailmap(File.join($base_dir, '.mailmap'))
+mailmap_file = %x[git config mailmap.file].chomp
+get_mailmap(mailmap_file)
+
+class ParseOpt
+  attr_writer :usage
+
+  class Option
+    attr_reader :short, :long, :help
+
+    def initialize(short, long, help, &block)
+      @block = block
+      @short = short
+      @long = long
+      @help = help
+    end
+
+    def call(v)
+      @block.call(v)
+    end
+  end
+
+  def initialize
+    @list = {}
+  end
+
+  def on(short = nil, long = nil, help = nil, &block)
+    opt = Option.new(short, long, help, &block)
+    @list[short] = opt if short
+    @list[long] = opt if long
+  end
+
+  def parse
+    if ARGV.member?('-h') or ARGV.member?('--help')
+      usage
+      exit 0
+    end
+    seen_dash = false
+    ARGV.delete_if do |cur|
+      opt = val = nil
+      next false if cur[0,1] != '-' or seen_dash
+      case cur
+      when '--'
+        seen_dash = true
+        next true
+      when /^--no-(.+)$/
+        opt = @list[$1]
+        val = false
+      when /^-([^-])(.+)?$/, /^--(.+?)(?:=(.+))?$/
+        opt = @list[$1]
+        val = $2 || true
+      end
+      if opt
+        opt.call(val)
+        true
+      end
+    end
+  end
+
+  def usage
+    def fmt(prefix, str)
+      return str ? prefix + str : nil
+    end
+    puts 'usage: %s' % @usage
+    @list.values.uniq.each do |opt|
+      s = '    '
+      s << ''
+      s << [fmt('-', opt.short), fmt('--', opt.long)].compact.join(', ')
+      s << ''
+      s << '%*s%s' % [26 - s.size, '', opt.help] if opt.help
+      puts s
+    end
+  end
+
+end
+
+opts = ParseOpt.new
+opts.usage = 'git related [options] <files | rev-list options>'
+
+opts.on('p', 'min-percent', 'Minium percentage of role participation') do |v|
+  $min_percent = v.to_i
+end
+
+opts.on('d', 'since', 'How far back to search for relevant commits') do |v|
+  $since = v
+end
+
+opts.on('c', 'commits', 'List commits instead of persons') do |v|
+  $show_commits = v
+end
+
+opts.parse
+
+class Person
+
+  attr_reader :roles
+
+  def initialize(name, email)
+    @name = name
+    @email = email
+    @commits = {}
+    @roles = Hash.new(0)
+  end
+
+  def add_role(commit, role)
+    @commits[commit] = true
+    @roles[role] += 1
+  end
+
+  def <=>(b)
+    self.size <=> b.size
+  end
+
+  def size
+    @commits.size
+  end
+
+  def to_s
+    '%s <%s>' % [@name, @email]
+  end
+
+end
+
+class Persons
+
+  @@index = {}
+
+  include Enumerable
+
+  def each(&block)
+    @@index.values.each(&block)
+  end
+
+  def self.get(name, email)
+
+    # fix with mailmap
+    person = [name, email]
+    new = nil
+    new = $mailmaps_complex[person] if not new and $mailmaps_complex.include?(person)
+    new = $mailmaps[email] if not new and $mailmaps.include?(email)
+    if new
+      name = new[0] if new[0]
+      email = new[1] if new[1]
+    end
+
+    id = email.downcase
+    person = @@index[id]
+    if not person
+      person = @@index[id] = Person.new(name, email)
+    end
+    person
+  end
+
+end
+
+class Commit
+
+  def initialize(id)
+    @id = id
+  end
+
+  def parse(data)
+    in_body = author = nil
+    data.each_line do |line|
+      if not in_body
+        case line
+        when /^author ([^<>]+) <(\S+)> (.+)$/
+          author = Persons.get($1, $2)
+          author.add_role(@id, :author)
+        when /^$/
+          in_body = true
+        end
+      else
+        role_regex = KNOWN_ROLES.keys.join('|')
+        if line =~ /^(#{role_regex}): ([^<>]+) <(\S+?)>$/
+          person = Persons.get($2, $3)
+          role = KNOWN_ROLES[$1]
+          next if role == :signer and person == author
+          person.add_role(@id, role)
+        end
+      end
+    end
+  end
+
+end
+
+class Commits
+
+  def initialize
+    @items = {}
+    @main_commits = {}
+    @sources = Hash.new { |hash, key| hash[key] = [] }
+  end
+
+  def size
+    @items.size
+  end
+
+  def each(&block)
+    @items.each(&block)
+  end
+
+  def list
+    @items.keys
+  end
+
+  def import
+    return if @items.empty?
+    File.popen(%w[git cat-file --batch], 'r+') do |p|
+      p.write(@items.keys.join("\n"))
+      p.close_write
+      p.each do |line|
+        if line =~ /^([0-9a-fA-F]{40}) commit (\d+)/
+          id, len = $1, $2
+          data = p.read($2.to_i)
+          @items[id].parse(data)
+        end
+      end
+    end
+  end
+
+  def get_blame(source, from, ranges)
+    Dir.chdir($base_dir)
+    ranges = ranges.map { |range| '-L%u,+%u' % range }
+    File.popen(['git', 'blame', '--incremental', '-C', '-C',
+                *ranges,
+                '--since', $since, from + '^',
+                '--', source]) do |p|
+      p.each do |line|
+        if line =~ /^[0-9a-fA-F]{40}/
+          id = $&
+          @items[id] ||= Commit.new(id) if not @main_commits.include?(id)
+        end
+      end
+    end
+    Dir.chdir($cur_dir)
+  end
+
+  def scan_patch(f, id = nil)
+    source = nil
+    f.each do |line|
+      case line
+      when /^From ([0-9a-fA-F]+) (.+)$/
+        id = $1
+        @main_commits[id] = true
+      when /^---\s+(\S+)/
+        source = $1 != '/dev/null' ? $1[2..-1] : nil
+      when /^@@ -(\d+)(?:,(\d+))?/
+        next unless source and id
+        next if $2 == 0
+        @sources[[source, id]] << [$1, $2 || 1]
+      end
+    end
+  end
+
+  def blame
+    @sources.each do |(source, id), ranges|
+      get_blame(source, id, ranges);
+    end
+  end
+
+  def from_patches(files)
+    files.each do |file|
+      File.open(file) do |f|
+        scan_patch(f)
+      end
+    end
+  end
+
+  def from_rev_args(args)
+    revs = []
+
+    File.popen(%w[git rev-parse --revs-only --default HEAD --symbolic] + args).each do |rev|
+      revs << rev.chomp
+    end
+
+    case revs.size
+    when 1
+      r = revs[0]
+      r = '^' + r if r[0] != '-'
+      args = [ r, 'HEAD' ]
+    else
+      args = revs
+    end
+
+    File.popen(%w[git rev-list --reverse] + args) do |p|
+      p.each do |e|
+        id = e.chomp
+        @main_commits[id] = true
+        File.popen(%w[git show -C --oneline] + [id]) do |p|
+          scan_patch(p, id)
+        end
+      end
+    end
+  end
+
+end
+
+ARGV.each do |e|
+  if File.exists?(e)
+    $files << e
+  else
+    $rev_args << e
+  end
+end
+
+commits = Commits.new
+if $files.empty?
+  commits.from_rev_args($rev_args)
+else
+  commits.from_patches($files)
+end
+commits.blame
+commits.import
+
+if $show_commits
+  cmd = nil
+  case $show_commits
+  when 'raw'
+    puts commits.list
+  when 'full'
+    cmd = %w[git log --patch --no-walk]
+  when 'long'
+    cmd = %w[git log --no-walk]
+  else
+    cmd = %w[git log --oneline --no-walk]
+  end
+  system(*cmd + commits.list) if cmd
+  exit 0
+end
+
+persons = Persons.new
+
+persons.sort.reverse.each do |person|
+  percent = person.size.to_f * 100 / commits.size
+  next if percent < $min_percent
+
+  roles = person.roles.map do |role, role_count|
+    role_percent = role_count.to_f * 100 / commits.size
+    '%s: %u%%' % [role, role_percent]
+  end
+
+  puts '%s (%s)' % [person, roles.join(', ')]
+end
