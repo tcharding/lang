@@ -5,6 +5,7 @@
 
 terminal=/usr/sbin/terminator
 sleep_period=1		  # Sleep for this many seconds to allow apps to launch.
+set_window="/home/tobin/build/github.com/tcharding/lang/bash/setwindow.sh"
 
 set-desktop() {
     xdotool set_desktop $1
@@ -15,12 +16,12 @@ pause() {
 }
 
 firefox-terminal() {
-    /home/tobin/bin/setwindow.sh firefox 840 0 56 93
+    $set_window firefox 840 0 56 93
     terminator --geometry 839x1005+0+0
 }
 
 emacs-terminal() {
-    /home/tobin/bin/setwindow.sh emacs 840 0 46 80
+    $set_window emacs 840 0 46 80
     terminator --geometry 839x1005+0+0
 }
 
