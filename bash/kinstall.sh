@@ -20,7 +20,7 @@ main() {
     cp $kimg "/boot/vmlinuz-${label}"
 
     # Make initramfs
-    make-initramfs.sh $label
+    make-initramfs $label
 
     # Update grub
     grub-mkconfig -o /boot/grub/grub.cfg
