@@ -2,45 +2,115 @@
 #
 # Sync SPOT/ to/from server
 
+server=nephele
+
 main()
 {
-    local cmd=$1
+    local _delete=false
+    local _help=false
+    local _cmd=""
 
-    if [ $cmd == "push" ]; then
-	push_to_lcn
-    elif [ $cmd == "pull" ]; then
-	pull_from_lcn
-    else
-	echo "Unknown command: $cmd"
-	exit 1
+    local _arg
+    for _arg in "$@"; do
+        case "${_arg%%=*}" in
+	    -d | --delete )
+		_delete=true
+		;;
+
+            -h | --help )
+                _help=true
+                ;;
+
+	    push )
+		_cmd="push"
+		;;
+
+	    pull )
+		_cmd="pull"
+		;;
+
+            *)
+                echo "Unknown argument '$_arg', displaying usage:"
+                echo ${_arg%%=*}
+                _help=true
+                ;;
+
+        esac
+
+    done
+
+    if [ "$_help" = true ]; then
+        print_help
+        exit 0
     fi
 
-    exit 0
+    do_sync $_cmd $_delete 
 }
 
-usage()
-{
-    echo "Usage: $script COMMAND" 
-    echo ""
-    echo "COMMANDS"
-    echo ""
-    echo "	push	sync ~/SPOT/ from host to server"
-    echo ""
-    echo "	pull	sync ~/SPOT/ from server to host"
-    echo ""
-    echo "WARNING: 'push' deletes files on the server if"
-    echo "          they are not peresent on the host."
-    echo ""
+print_help() {
+echo '
+Usage: spot-push [OPTIONS] COMMAND
+
+Commands:
+
+	push	sync ~/SPOT/ from local host to server"
+	pull	sync ~/SPOT/ from server to local host"
+	
+Options:
+
+     --delete, -d	Delete files during rsync (default for "push")
+     --help, -h         Display usage information
+'
 }
 
-push_to_lcn()
+do_sync()
 {
-    rsync -avz "$HOME/SPOT" lcn:"$HOME" --delete --ignore-errors
+    local cmd=$1
+    local delete=$2
+
+    if [ $cmd == "push" ]; then
+	push_to_server
+	return 0
+    fi
+	
+    if [ $cmd == "pull" ]; then
+	if [ $delete == true ]; then
+	    pull_from_server_delete
+	else
+	    pull_from_server
+	fi
+    fi
 }
 
-pull_from_lcn()
+# Default to deleting files when pushing.
+push_to_server()
 {
-    rsync -avz lcn:"$HOME/SPOT" $HOME
+    rsync -avz "$HOME/SPOT" $server:"$HOME" --delete --ignore-errors
+    log_action "push"
+}
+
+# Default to NOT deleting files when pulling.
+pull_from_server()
+{
+    rsync -avz $server:"$HOME/SPOT" $HOME
+    log_action "pull"
+}
+
+pull_from_server_delete()
+{
+    rsync -avz $server:"$HOME/SPOT" $HOME --delete --ignore-errors
+    log_action "pull delete"
+}
+
+log_action()
+{
+    local action=$1
+    local host=$(hostname)
+    local date=$(date)
+
+    local log_msg="$date    $host    $action"
+
+    echo "$log_msg" | ssh $server "cat >> /home/tobin/spot.log"
 }
 
 #
@@ -49,7 +119,7 @@ pull_from_lcn()
 
 if [ $# -lt 1 ]; then
     script=$(basename $0)
-    usage
+    print_help
     exit 0
 fi
 
