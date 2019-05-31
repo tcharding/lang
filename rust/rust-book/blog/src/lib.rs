@@ -7,20 +7,24 @@ impl DraftPost {
         self.content.push_str(text);
     }
 
-    pub fn request_review(self) -> PendingReviewPost {
-        PendingReviewPost {
+    pub fn request_review(self) -> PendingFirstReviewPost {
+        PendingFirstReviewPost {
             content: self.content,
         }
     }
 }
 
-pub struct PendingReviewPost {
+pub struct PendingFirstReviewPost {
     content: String,
 }
 
-impl PendingReviewPost {
-    pub fn approve(self) -> Post {
-        Post {
+pub struct PendingSecondReviewPost {
+    content: String,
+}
+
+impl PendingFirstReviewPost {
+    pub fn approve(self) -> PendingSecondReviewPost {
+        PendingSecondReviewPost {
             content: self.content,
         }
     }
@@ -29,6 +33,19 @@ impl PendingReviewPost {
         DraftPost {
             content: self.content,
         }
+    }
+}
+
+impl PendingSecondReviewPost {
+    pub fn approve(self) -> Post {
+        Post {
+            content: self.content,
+        }
+    }
+
+    pub fn reject(self) -> PendingSecondReviewPost {
+        // Rejection of already reviewed post maintains the original review.
+        self
     }
 }
 
