@@ -7,6 +7,10 @@ impl DraftPost {
         self.content.push_str(text);
     }
 
+    pub fn replace_text(&mut self, text: &str) {
+        self.content = text.to_string();
+    }
+
     pub fn request_review(self) -> PendingFirstReviewPost {
         PendingFirstReviewPost {
             content: self.content,
