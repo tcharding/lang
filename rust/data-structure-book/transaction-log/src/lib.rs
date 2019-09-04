@@ -1,12 +1,12 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-type SingleLink = Option<Rc<RefCell<Node>>>;
+type Link = Option<Rc<RefCell<Node>>>;
 
 #[derive(Clone, Debug)]
 struct Node {
     value: String,
-    next: SingleLink,
+    next: Link,
 }
 
 impl Node {
@@ -20,8 +20,8 @@ impl Node {
 
 #[derive(Debug)]
 pub struct TransactionLog {
-    head: SingleLink,
-    tail: SingleLink,
+    head: Link,
+    tail: Link,
     pub length: usize,
 }
 
