@@ -4,7 +4,7 @@ use std::rc::Rc;
 type Link = Option<Rc<RefCell<Node>>>;
 
 #[derive(Clone, Debug)]
-struct Node {
+pub struct Node {
     value: String,
     next: Link,
 }
@@ -36,6 +36,7 @@ impl TransactionLog {
 
     pub fn append(&mut self, value: String) {
         let new = Node::new(value);
+        // Why `self.tail.take()`, why not `&self.tail`
         match self.tail.take() {
             Some(old) => old.borrow_mut().next = Some(new.clone()),
             None => self.head = Some(new.clone()),
@@ -49,7 +50,7 @@ impl TransactionLog {
             if let Some(next) = head.borrow_mut().next.take() {
                 self.head = Some(next);
             } else {
-                self.tail.take();
+                self.tail.take(); // Does this set self.tail to None?
             }
             self.length -= 1;
             Rc::try_unwrap(head)
@@ -58,6 +59,39 @@ impl TransactionLog {
                 .into_inner()
                 .value
         })
+    }
+
+    pub fn iter(&self) -> ListIterator {
+        ListIterator::new(&self)
+    }
+}
+
+pub struct ListIterator {
+    current: Link,
+}
+
+impl ListIterator {
+    pub fn new(log: &TransactionLog) -> ListIterator {
+        ListIterator {
+            current: log.head.clone(),
+        }
+    }
+}
+
+impl Iterator for ListIterator {
+    type Item = String;
+    fn next(&mut self) -> Option<String> {
+        let current = &self.current;
+        let mut result = None;
+        self.current = match current {
+            Some(ref current) => {
+                let current = current.borrow();
+                result = Some(current.value.clone());
+                current.next.clone()
+            }
+            None => None,
+        };
+        result
     }
 }
 
