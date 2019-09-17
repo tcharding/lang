@@ -7,4 +7,7 @@ fn main() {
     } else {
         println!("Poo, freshly spawned RBT is invalid.")
     }
+
+    // tree.add(2);
+    // assert!(tree.is_valid());
 }
