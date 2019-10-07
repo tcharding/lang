@@ -11,7 +11,7 @@
 LOG='/var/log/duplicity.log'
 SRC='/'
 DST='file:///mnt/xhd/duplicity/'
-EXCLUDES='--exclude /mnt --exclude /proc --exclude /tmp --exclude /sys --exclude /boot --exclude /lib/modules'
+EXCLUDES='--exclude /mnt --exclude /proc --exclude /tmp --exclude /sys --exclude /boot --exclude /lib/modules --exclude /home/tobin/.gnupg'
 
 log_msg(){
     echo $@ >> $LOG
@@ -21,7 +21,7 @@ log_msg(){
 lsblk | grep sdb1 | grep xhd >> /dev/null
 if (( $? != 0 ));
 then
-    echo "Error: external hard disk not mounted" >&2
+    echo "Error: external hard disk not mounted, expected on /mnt/xhd" >&2
     exit 1
 fi
 
