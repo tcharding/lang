@@ -1,13 +1,12 @@
 use red_black_tree::Rbt;
+use std::process;
 
 fn main() {
     let tree = Rbt::new();
     if tree.is_valid() {
-        println!("Yah, you created a valid null RBT!");
+        println!("You created a valid null RBT!");
     } else {
-        println!("Poo, freshly spawned RBT is invalid.")
+        eprintln!("Poo, freshly sprouted RBT is invalid.");
+        process::exit(-1);
     }
-
-    // tree.add(2);
-    // assert!(tree.is_valid());
 }
