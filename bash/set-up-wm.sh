@@ -15,32 +15,31 @@ pause() {
     sleep $sleep_period
 }
 
-firefox-terminal() {
+firefox() {
     $set_window firefox 840 0 56 93
-    terminator --geometry 839x1005+0+0
 }
 
 emacs-terminal() {
-    $set_window emacs 840 0 46 80
-    terminator --geometry 839x1005+0+0
+    emacs --maximized
+    terminator --maximize
+#    $set_window emacs 840 0 46 80
+#    terminator --geometry 839x1005+0+0
 }
 
-# WTF, emacs alwas starts on boot?
-pkill emacs
+# desktop 1: a terminal maximised
+set-desktop 1
+terminator -m &
+pause
 
-# desktop 3: a terminal maximised
+# desktop 2: emacs and a terminal
+set-desktop 2
+emacs --maximized &
+terminator --maximize &
+pause
+
+# desktop 3: firefox
 set-desktop 3
-terminator -m
-pause
-
-# desktop 4: emacs and a terminal
-set-desktop 4
-emacs-terminal
-pause
-
-# desktop 5: firefo xand a terminal
-set-desktop 5
-firefox-terminal
+firefox &
 pause
 
 exit 0
