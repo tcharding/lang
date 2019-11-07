@@ -12,7 +12,7 @@ use std::rc::Rc;
 
 /// Operations within the tree, `LeftNode` traverses the tree to
 /// the left and `RightNode` traverses down the tree to the right.
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum RbOperation {
     LeftNode,
     RightNode,
@@ -50,6 +50,7 @@ impl Node {
     }
 }
 
+#[allow(dead_code)]
 fn is_black(node: Tree) -> bool {
     if let Some(n) = node {
         return bare_tree_node_is_black(n);
@@ -69,6 +70,7 @@ pub struct Rbt {
 }
 
 impl Rbt {
+    /// Creates a new empty red-black tree.
     pub fn new() -> Self {
         Rbt {
             root: None,
@@ -76,6 +78,7 @@ impl Rbt {
         }
     }
 
+    /// Returns true if the tree is a valid red-black tree.
     pub fn is_valid(&self) -> bool {
         let result = validate(&self.root, Colour::Red, 0);
         let red_red = result.0;
@@ -84,18 +87,22 @@ impl Rbt {
         red_red == 0 && black_height_min == black_height_max
     }
 
+    /// Adds 'value' to the tree.
     pub fn add(&mut self, value: usize) {
         self.length += 1;
         let root = mem::replace(&mut self.root, None);
-        let _new_tree = self.add_r(root, value);
-        //        self.root = self.fix_tree(new_tree.1);
+        let new_tree = self.add_r(root, value);
+        self.root = self.fix_tree(new_tree.1);
     }
 
+    // Recursively adds 'add_value' to the tree starting at 'node'.
+    // Returns node and the newly added node.
     fn add_r(&self, mut node: Tree, add_value: usize) -> (Tree, BareTree) {
         if let Some(n) = node.take() {
-            let new: BareTree;
+            let new: BareTree; // Used to reference the new root node.
             let node_value = n.borrow().value;
 
+            // TODO: Refactor this once tree is functional and tested.
             match self.check(add_value, node_value) {
                 RbOperation::LeftNode => {
                     let left = n.borrow().left.clone();
@@ -130,64 +137,116 @@ impl Rbt {
         RbOperation::RightNode
     }
 
-    // fn fix_tree(&mut self, inserted: BareTree) -> Tree {
-    //     let mut not_root = inserted.borrow().parent.is_some();
+    fn fix_tree(&mut self, inserted: BareTree) -> Tree {
+        let mut not_root = inserted.borrow().parent.is_some();
 
-    //     let root = if not_root {
-    //         let mut parent_is_red = self.parent_colour(&inserted) == Colour::Red;
-    //         let mut n = inserted.clone();
-    //         while parent_is_red && not_root {
-    //             if let Some(uncle) = self.uncle(n.clone()) {
-    //                 let which = uncle.1;
-    //                 let uncle = uncle.0;
+        let root = if not_root {
+            let mut parent_is_red = self.parent_colour(&inserted) == Colour::Red;
+            let mut n = inserted.clone();
+            while parent_is_red && not_root {
+                if let Some(uncle) = self.uncle(n.clone()) {
+                    let which = uncle.1;
+                    let uncle = uncle.0;
 
-    //                 match which {
-    //                     RbOperation::LeftNode {
-    //                         let mut parent = n.borrow().parent
-    //                             .as_ref().unwrap().clone();
-    //                         if uncle.is_some() && uncle.as_ref().unwrap().borrow().colour == Colour::Red {
-    //                             let uncle = uncle.unwrap();
-    //                             parent.borrow_mut().colour = Colour::Black;
-    //                             uncle.borrow_mut().colour = Colour::Black;
-    //                             parent.borrow().parent.as_ref().unwrap().borrow_mut().colour = Colour::Red;
+                    match which {
+                        RbOperation::LeftNode => {
+                            let mut parent = n.borrow().parent.as_ref().unwrap().clone();
+                            if uncle.is_some()
+                                && uncle.as_ref().unwrap().borrow().colour == Colour::Red
+                            {
+                                let uncle = uncle.unwrap();
+                                parent.borrow_mut().colour = Colour::Black;
+                                uncle.borrow_mut().colour = Colour::Black;
+                                parent.borrow().parent.as_ref().unwrap().borrow_mut().colour =
+                                    Colour::Red;
 
-    //                             n = parent.borrow().parent.as_ref().unwrap().clone();
-    //                         } else {
-    //                             // do only if its the right child
-    //                             if parent.borrow().value > n.borrow().value {
-    //                                 let tmp = n.borrow().parent.as_ref().unwrap().clone();
-    //                                 n = tmp;
-    //                                 self.rotate_right(n.clone());
-    //                                 parent = n.borrow().parent.as_ref().unwrap().clone();
-    //                             }
-    //                             // until here then for all black uncles.
-    //                             parent.borrow_mut().colour = Colour::Black;
-    //                             parent.borrow().parent.as_ref().unwrap().borrow_mut().colour = Colour::Red;
-    //                             let grandparent = n.borrow().parent.as_ref().unwrap().borrow().parent.as_ref().unwrap().clone();
-    //                             self.rotate_left(grandparent)
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //             not_root = n.borrow().parent.is_some();
-    //             if not_root {
-    //                 parent_is_red = self.parent_colour(&n) == Colour::Red;
-    //             }
-    //         }
-    //         while n.borrow().parent.is_some() {
-    //             let t = n.borrow().parent.as_ref()unwrap().clone();
-    //             n = t;
-    //         }
-    //         Some(n)
-    //     } else {
-    //         Some(inserted)
-    //     };
-    //     root.map(|r| {
-    //         r.borrow_mut().colour = Colour::Black;
-    //         r
-    //     })
-    // }
+                                n = parent.borrow().parent.as_ref().unwrap().clone();
+                            } else {
+                                // do only if its the right child
+                                if parent.borrow().value > n.borrow().value {
+                                    let tmp = n.borrow().parent.as_ref().unwrap().clone();
+                                    n = tmp;
+                                    self.rotate_right(n.clone());
+                                    parent = n.borrow().parent.as_ref().unwrap().clone();
+                                }
+                                // until here then for all black uncles.
+                                parent.borrow_mut().colour = Colour::Black;
+                                parent.borrow().parent.as_ref().unwrap().borrow_mut().colour =
+                                    Colour::Red;
+                                let grandparent = n
+                                    .borrow()
+                                    .parent
+                                    .as_ref()
+                                    .unwrap()
+                                    .borrow()
+                                    .parent
+                                    .as_ref()
+                                    .unwrap()
+                                    .clone();
+                                self.rotate_left(grandparent)
+                            }
+                        }
+                        RbOperation::RightNode => {
+                            // What goes here?
+                        }
+                    }
+                }
+                not_root = n.borrow().parent.is_some();
+                if not_root {
+                    parent_is_red = self.parent_colour(&n) == Colour::Red;
+                }
+            }
+            while n.borrow().parent.is_some() {
+                let t = n.borrow().parent.as_ref().unwrap().clone();
+                n = t;
+            }
+            Some(n)
+        } else {
+            Some(inserted)
+        };
+        root.map(|r| {
+            r.borrow_mut().colour = Colour::Black;
+            r
+        })
+    }
+
+    #[allow(dead_code)]
+    fn uncle(&self, node: BareTree) -> Option<(Tree, RbOperation)> {
+        // FIXME: These could be as_ref() instead of clone().
+        if let Some(p) = node.borrow().parent.clone() {
+            if let Some(gp) = p.borrow().parent.clone() {
+                let pv = p.borrow().value;
+                let gpv = gp.borrow().value;
+
+                match self.check(pv, gpv) {
+                    RbOperation::LeftNode => {
+                        return Some((gp.borrow().right.clone(), RbOperation::RightNode));
+                    }
+                    _ => {
+                        return Some((gp.borrow().left.clone(), RbOperation::LeftNode));
+                    }
+                }
+            }
+        }
+        None
+    }
+
+    /// Returns parent colour of 'node', 'node; must not be the root node.
+    fn parent_colour(&self, node: &BareTree) -> Colour {
+        node.borrow()
+            .parent
+            .as_ref()
+            .unwrap()
+            .borrow()
+            .colour
+            .clone()
+    }
+
+    fn rotate_right(&self, node: BareTree) {}
+
+    fn rotate_left(&self, node: BareTree) {}
 }
+
 //     /// Returns true if value exists in the tree.
 //     pub fn find(&self, value: usize) -> bool {
 //         self.find_r(&self.root, value)
@@ -256,10 +315,6 @@ fn max(this: usize, that: usize) -> usize {
     }
     that
 }
-
-// fn uncle(node: Tree) -> (Tree, RbOperation) {
-
-// }
 
 #[cfg(test)]
 mod tests {
@@ -339,4 +394,69 @@ mod tests {
     //     rbt.add(5);
     //     assert_eq!(rbt.length, 1);
     // }
+
+    #[test]
+    fn returns_correct_uncle() {
+        let rbt = Rbt::new(); // Tree does not store data, just used to call uncle().
+
+        let zero = Node::new(0).unwrap();
+        let one = Node::new(1).unwrap();
+        let two = Node::new(2).unwrap(); // root node
+        let three = Node::new(3).unwrap();
+        let four = Node::new(4).unwrap();
+
+        // Connect children of root node.
+        two.borrow_mut().left = Some(one.clone());
+        two.borrow_mut().right = Some(three.clone());
+        one.borrow_mut().parent = Some(two.clone());
+        three.borrow_mut().parent = Some(two.clone());
+
+        // Connect grandchildren.
+        three.borrow_mut().right = Some(four.clone());
+        four.borrow_mut().parent = Some(three.clone());
+        one.borrow_mut().left = Some(zero.clone());
+        zero.borrow_mut().parent = Some(one.clone());
+
+        let uncle = rbt.uncle(four).unwrap();
+        let (uncle, which) = uncle;
+        assert_eq!(which, RbOperation::LeftNode);
+        let uncle = uncle.unwrap();
+        assert_eq!(uncle.borrow().value, 1);
+
+        let uncle = rbt.uncle(zero).unwrap();
+        let (uncle, which) = uncle;
+        assert_eq!(which, RbOperation::RightNode);
+        let uncle = uncle.unwrap();
+        assert_eq!(uncle.borrow().value, 3);
+    }
+
+    #[test]
+    fn nil_uncle_is_returned() {
+        let rbt = Rbt::new(); // Tree does not store data, just used to call uncle().
+
+        let zero = Node::new(0).unwrap();
+        //  'one' is a null leaf node.
+        let two = Node::new(2).unwrap(); // root node
+        let three = Node::new(3).unwrap();
+        let four = Node::new(4).unwrap();
+
+        // Connect children of root node.
+        two.borrow_mut().right = Some(three.clone());
+        three.borrow_mut().parent = Some(two.clone());
+
+        // Connect grandchildren.
+        three.borrow_mut().right = Some(four.clone());
+        four.borrow_mut().parent = Some(three.clone());
+
+        let uncle = rbt.uncle(four).unwrap();
+        let (uncle, which) = uncle;
+        assert!(uncle.is_none());
+    }
+
+    #[test]
+    fn can_flatten_empty_tree() {
+        let rbt = Rbt::new();
+        let v: Vec = rbt.flatten();
+        assert!(v.is_empty());
+    }
 }
