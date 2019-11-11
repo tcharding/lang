@@ -1,3 +1,9 @@
-/target
+# Build artifacts (is there a better way to do this?)
+target/
+*/target/*
+*/*/target/*
+
+# backup files
 **/*.rs.bk
 *~
+
