@@ -11,7 +11,7 @@
 LOG='/var/log/duplicity.log'
 SRC='/'
 DST='file:///mnt/xhd/duplicity/'
-EXCLUDES='--exclude /mnt --exclude /proc --exclude /tmp --exclude /sys --exclude /boot --exclude /lib/modules --exclude /home/tobin/.gnupg'
+EXCLUDES='--exclude /mnt --exclude /proc --exclude /tmp --exclude /sys --exclude /boot --exclude /lib/modules --exclude /home/tobin/.gnupg --exclude /home/tobin/Videos --exclude /home/tobi/Downloads' 
 
 log_msg(){
     echo $@ >> $LOG
